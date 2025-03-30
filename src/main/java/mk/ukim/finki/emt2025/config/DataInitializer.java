@@ -1,0 +1,49 @@
+package mk.ukim.finki.emt2025.config;
+
+import jakarta.annotation.PostConstruct;
+import mk.ukim.finki.emt2025.model.Author;
+import mk.ukim.finki.emt2025.model.Book;
+import mk.ukim.finki.emt2025.model.Country;
+import mk.ukim.finki.emt2025.model.Enumerations.CategoryBook;
+import mk.ukim.finki.emt2025.repository.AuthorRepository;
+import mk.ukim.finki.emt2025.repository.BookRepository;
+import mk.ukim.finki.emt2025.repository.CountryRepository;
+import org.springframework.stereotype.Component;
+
+@Component
+public class DataInitializer {
+
+    private final CountryRepository countryRepository;
+    private final AuthorRepository authorRepository;
+    private final BookRepository bookRepository;
+
+    public DataInitializer(CountryRepository countryRepository, AuthorRepository authorRepository, BookRepository bookRepository) {
+        this.countryRepository = countryRepository;
+        this.authorRepository = authorRepository;
+        this.bookRepository = bookRepository;
+    }
+
+    @PostConstruct
+    public void init() {
+        // Initialize countries
+        Country usa = countryRepository.save(new Country("USA", "North America"));
+        Country uk = countryRepository.save(new Country("UK", "Europe"));
+        Country germany = countryRepository.save(new Country("Germany", "Europe"));
+        Country france = countryRepository.save(new Country("France", "Europe"));
+        Country italy = countryRepository.save(new Country("Italy", "Europe"));
+
+        // Initialize authors
+        Author author1 = authorRepository.save(new Author("John", "Doe", usa));
+        Author author2 = authorRepository.save(new Author("Emily", "Smith", uk));
+        Author author3 = authorRepository.save(new Author("Hans", "Müller", germany));
+        Author author4 = authorRepository.save(new Author("Pierre", "Dupont", france));
+        Author author5 = authorRepository.save(new Author("Giovanni", "Rossi", italy));
+
+        // Initialize books
+        bookRepository.save(new Book("The Great Adventure", CategoryBook.NOVEL, 10, author1));
+        bookRepository.save(new Book("History of Europe", CategoryBook.HISTORY, 5, author2));
+        bookRepository.save(new Book("A little bit of drama", CategoryBook.DRAMA, 8, author3));
+        bookRepository.save(new Book("Alien War", CategoryBook.FANTASY, 12, author4));
+        bookRepository.save(new Book("The Art of War", CategoryBook.CLASSICS, 7, author5));
+    }
+}
