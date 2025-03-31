@@ -1,10 +1,10 @@
-package mk.ukim.finki.emt2025.service.impl;
+package mk.ukim.finki.emt2025.service.domain.impl;
 
 
-import mk.ukim.finki.emt2025.model.Author;
-import mk.ukim.finki.emt2025.model.dto.AuthorDto;
+import mk.ukim.finki.emt2025.model.domain.Author;
+import mk.ukim.finki.emt2025.model.dto.CreateAuthorDto;
 import mk.ukim.finki.emt2025.repository.AuthorRepository;
-import mk.ukim.finki.emt2025.service.AuthorService;
+import mk.ukim.finki.emt2025.service.domain.AuthorService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Optional<Author> update(Long id, AuthorDto authorDto) {
+    public Optional<Author> update(Long id, CreateAuthorDto authorDto) {
         return authorRepository.findById(id)
                 .map(author -> {
                     if (authorDto.getName() != null){
@@ -50,7 +50,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Optional<Author> save(AuthorDto authorDto) {
+    public Optional<Author> save(CreateAuthorDto authorDto) {
         if (authorDto.getName() != null && authorDto.getSurname() != null
         && authorDto.getCountry() != null && countryService.findById(authorDto.getCountry()).isPresent()) {
             return Optional.of(authorRepository.save(new Author(authorDto.getName(), authorDto.getSurname(), countryService.findById(authorDto.getCountry()).get())));
@@ -60,7 +60,9 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public Optional<Author> deleteById(Long id) {
+        Optional<Author> authorOptional = authorRepository.findById(id);
         authorRepository.deleteById(id);
+        return authorOptional;
     }
 }

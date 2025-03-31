@@ -1,9 +1,8 @@
 package mk.ukim.finki.emt2025.model.dto;
-import lombok.Data;
-import mk.ukim.finki.emt2025.model.Author;
 import mk.ukim.finki.emt2025.model.Enumerations.CategoryBook;
+import mk.ukim.finki.emt2025.model.domain.Book;
 
-public class BookDto {
+public class CreateBookDto {
 
     String name;
 
@@ -12,6 +11,10 @@ public class BookDto {
     Long author;
 
     Integer availableCopies;
+
+    public static CreateBookDto from(Book book){
+        return new CreateBookDto();
+    }
 
     public String getName() {
         return name;

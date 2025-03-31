@@ -1,56 +1,146 @@
 package mk.ukim.finki.emt2025.web;
 
 
-import mk.ukim.finki.emt2025.model.Book;
-import mk.ukim.finki.emt2025.model.dto.BookDto;
-import mk.ukim.finki.emt2025.service.impl.BookServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import mk.ukim.finki.emt2025.model.domain.Book;
+import mk.ukim.finki.emt2025.model.dto.CreateBookDto;
+import mk.ukim.finki.emt2025.model.dto.DisplayBookDto;
+import mk.ukim.finki.emt2025.service.application.BookApplicationService;
+import mk.ukim.finki.emt2025.service.domain.impl.BookServiceImpl;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 //http://localhost:8080/swagger-ui/index.html#/
 @RestController
 @RequestMapping(value = {"/api/books"})
+@Tag(name = "Book API", description = "Manipulate with the books")
 public class BookController {
 
-    private final BookServiceImpl bookService;
+    private final BookApplicationService bookService;
 
-    public BookController(BookServiceImpl bookService) {
+    public BookController(BookApplicationService bookService) {
         this.bookService = bookService;
     }
 
 
+    @Operation(summary = "List Books", description = "List all of the books in the DB, is the response is empty, there are no books in the DB")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Successfully Listed All of the books"
+                    )
+
+            }
+    )
     @GetMapping
-    List<Book> findAll(){
+    List<DisplayBookDto> findAll(){
+        /*Iterator<String> httpIterator = httpServletRequest.getHeaderNames().asIterator();
+        while (httpIterator.hasNext()){
+            System.out.println(httpIterator.next());
+       }*/
+
+       // System.out.println(userDetails.getUsername());
+        //System.out.println((String) httpServletRequest.getSession().getAttribute("user"));
        return bookService.findByIsSoftDeleted();
     }
+
+
+    @Operation(summary = "Find Book", description = "Find a book by its ID, a 404 code will be returned if the id send is invalid.")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Successfully found and returned the book."
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "A book with the specified ID doesn't exist."
+                    )
+
+            }
+    )
     @GetMapping("/{id}")
-    ResponseEntity<Book> findById(@PathVariable(value = "id") Long bookId){
+    ResponseEntity<DisplayBookDto> findById(@PathVariable(value = "id") Long bookId){
         return bookService.findById(bookId)
                 .map(book -> {return ResponseEntity.ok(book);})
                 .orElse(ResponseEntity.notFound().build());
 
     }
 
-    @PostMapping("/add")
-    ResponseEntity<Book> save(@RequestBody BookDto bookDto){
+    @Operation(summary = "Add book", description = "Add a whole new book.")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Successfully added the book"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad request, All parameters need to be send."
+                    )
 
-        return bookService.save(bookDto)
+            }
+    )
+    @PostMapping("/add")
+    ResponseEntity<DisplayBookDto> save(@RequestBody CreateBookDto createBookDto){
+
+        return bookService.save(createBookDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
 
 
     }
+    @Operation(summary = "Update Book", description = "Update a specific book, null values will be ignored.")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Book Updated successfully"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad request, All parameters need to be send. But you can set null values to those who you dont want changed."
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Book with that specific ID was not found."
+                    )
 
+            }
+    )
     @PutMapping("/update/{id}")
-    ResponseEntity<Object> update(@PathVariable(value = "id") Long bookId, @RequestBody BookDto bookDto){
+    ResponseEntity<Object> update(@PathVariable(value = "id") Long bookId, @RequestBody CreateBookDto createBookDto){
 
-            return bookService.update(bookId, bookDto)
+            return bookService.update(bookId, createBookDto)
                     .map(book -> {return ResponseEntity.ok().build();})
                     .orElse(ResponseEntity.notFound().build());
 
     }
+    @Operation(summary = "Delete Book", description = "Delete a specific book.")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Book Deleted successfully"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Book with that specific ID was not found."
+                    )
 
+            }
+    )
     @DeleteMapping("/delete/{id}")
     ResponseEntity<Object> delete(@PathVariable(value = "id") Long bookId) {
 
@@ -60,14 +150,32 @@ public class BookController {
 
     }
 
+    @Operation(summary = "Soft Delete a Book", description = "Tag a book for soft deletion, this book we be interpreted as deleted but kept in the DB.")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Book soft Deleted successfully"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Book with that specific ID was not found."
+                    )
+
+            }
+    )
     @DeleteMapping("/softDelete/{id}")
-    ResponseEntity<Book> softDelete(@PathVariable Long id){
+    ResponseEntity<DisplayBookDto> softDelete(@PathVariable Long id){
 
         return bookService.softDeleteById(id)
                 .map(book -> ResponseEntity.ok(book))
                 .orElse(ResponseEntity.notFound().build());
 
     }
+
+
+
+
 
 
 

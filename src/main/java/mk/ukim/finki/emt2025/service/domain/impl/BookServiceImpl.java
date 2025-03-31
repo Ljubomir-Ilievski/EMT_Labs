@@ -1,10 +1,10 @@
-package mk.ukim.finki.emt2025.service.impl;
+package mk.ukim.finki.emt2025.service.domain.impl;
 
 
-import mk.ukim.finki.emt2025.model.Book;
-import mk.ukim.finki.emt2025.model.dto.BookDto;
+import mk.ukim.finki.emt2025.model.domain.Book;
+import mk.ukim.finki.emt2025.model.dto.CreateBookDto;
 import mk.ukim.finki.emt2025.repository.BookRepository;
-import mk.ukim.finki.emt2025.service.BookService;
+import mk.ukim.finki.emt2025.service.domain.BookService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> findAll() {
-        return bookRepository.findAll();
+        return bookRepository.findByIsSoftDeleted(false);
     }
 
     @Override
@@ -32,20 +32,20 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<Book> update(Long id, BookDto bookDto) {
-        return bookRepository.findByIdAndIsSoftDeleted(id, false)
+    public Optional<Book> update(Long id, CreateBookDto createBookDto) {
+        return findById(id)
                 .map(book -> {
-                    if (bookDto.getName() != null){
-                        book.setName(bookDto.getName());
+                    if (createBookDto.getName() != null){
+                        book.setName(createBookDto.getName());
                     }
-                    if (bookDto.getAvailableCopies() != null){
-                        book.setAvailableCopies(bookDto.getAvailableCopies());
+                    if (createBookDto.getAvailableCopies() != null){
+                        book.setAvailableCopies(createBookDto.getAvailableCopies());
                     }
-                    if (bookDto.getAuthor() != null && authorService.findById(bookDto.getAuthor()).isPresent()){
-                        book.setAuthor(authorService.findById(bookDto.getAuthor()).get());
+                    if (createBookDto.getAuthor() != null && authorService.findById(createBookDto.getAuthor()).isPresent()){
+                        book.setAuthor(authorService.findById(createBookDto.getAuthor()).get());
                     }
-                    if (bookDto.getCategory() != null){
-                        book.setCategory(bookDto.getCategory());
+                    if (createBookDto.getCategory() != null){
+                        book.setCategory(createBookDto.getCategory());
                     }
                     bookRepository.save(book);
                     return book;
@@ -53,14 +53,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<Book> save(BookDto bookDto) {
-        if (bookDto.getCategory() != null
-        && bookDto.getName() != null
-        && bookDto.getAvailableCopies() !=null
-        && bookDto.getAuthor() != null
-        && authorService.findById(bookDto.getAuthor()).isPresent()){
-           return Optional.of(bookRepository.save(new Book(bookDto.getName(), bookDto.getCategory(), bookDto.getAvailableCopies(),
-                   authorService.findById(bookDto.getAuthor()).get())));
+    public Optional<Book> save(CreateBookDto createBookDto) {
+        if (createBookDto.getCategory() != null
+        && createBookDto.getName() != null
+        && createBookDto.getAvailableCopies() !=null
+        && createBookDto.getAuthor() != null
+        && authorService.findById(createBookDto.getAuthor()).isPresent()){
+           return Optional.of(bookRepository.save(new Book(createBookDto.getName(), createBookDto.getCategory(), createBookDto.getAvailableCopies(),
+                   authorService.findById(createBookDto.getAuthor()).get())));
         }
         return Optional.empty();
     }
@@ -68,7 +68,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Optional<Book> deleteById(Long id) {
 
-        if (bookRepository.findByIdAndIsSoftDeleted(id, false).isPresent()) {
+        if (findById(id).isPresent()) {
             Optional<Book> optionalBook = bookRepository.findById(id);
             bookRepository.deleteById(id);
             return optionalBook;
@@ -78,7 +78,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Optional<Book> softDeleteById(Long id) {
-        if (bookRepository.findByIdAndIsSoftDeleted(id, false).isPresent()){
+        if (findById(id).isPresent()){
             Optional<Book> optionalBook = bookRepository.findById(id);
             optionalBook.get().setSoftDeleted(Boolean.TRUE);
             bookRepository.save(optionalBook.get());

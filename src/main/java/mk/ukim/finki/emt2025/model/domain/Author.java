@@ -1,8 +1,7 @@
-package mk.ukim.finki.emt2025.model;
+package mk.ukim.finki.emt2025.model.domain;
 
 
 import jakarta.persistence.*;
-import lombok.Data;
 
 @Entity
 public class Author {

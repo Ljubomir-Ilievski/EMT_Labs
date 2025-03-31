@@ -1,8 +1,6 @@
 package mk.ukim.finki.emt2025.model.dto;
 
-import lombok.Data;
-
-public class CountryDto {
+public class CreateCountryDto {
 
     String name;
     String continent;

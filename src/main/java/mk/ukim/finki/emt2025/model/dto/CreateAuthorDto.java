@@ -1,11 +1,7 @@
 package mk.ukim.finki.emt2025.model.dto;
 
-import jakarta.persistence.ManyToOne;
-import lombok.Data;
-import mk.ukim.finki.emt2025.model.Country;
 
-
-public class AuthorDto {
+public class CreateAuthorDto {
 
 
     String name;
