@@ -23,4 +23,6 @@ public interface BookApplicationService {
 
     List<DisplayBookDto> findByIsSoftDeleted();
 
+    List<DisplayBookDto> findNewest10Books();
+
 }

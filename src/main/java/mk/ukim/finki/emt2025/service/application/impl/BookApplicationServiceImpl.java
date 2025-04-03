@@ -1,5 +1,6 @@
 package mk.ukim.finki.emt2025.service.application.impl;
 
+import mk.ukim.finki.emt2025.model.domain.Book;
 import mk.ukim.finki.emt2025.model.dto.CreateBookDto;
 import mk.ukim.finki.emt2025.model.dto.DisplayBookDto;
 import mk.ukim.finki.emt2025.service.application.BookApplicationService;
@@ -52,5 +53,10 @@ public class BookApplicationServiceImpl  implements BookApplicationService {
     @Override
     public List<DisplayBookDto> findByIsSoftDeleted() {
         return DisplayBookDto.from(bookService.findByIsSoftDeleted());
+    }
+
+    @Override
+    public List<DisplayBookDto> findNewest10Books() {
+        return DisplayBookDto.from(bookService.findNewest10Books());
     }
 }

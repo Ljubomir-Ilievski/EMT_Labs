@@ -12,4 +12,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findByIsSoftDeleted(Boolean isSoftDeleted);
 
     Optional<Book> findByIdAndIsSoftDeleted(Long id, Boolean isSoftDeleted);
+
+    List<Book> findTop10ByOrderByDatePublishedDesc();
 }

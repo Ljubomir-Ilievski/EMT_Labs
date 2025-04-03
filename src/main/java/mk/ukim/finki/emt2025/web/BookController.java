@@ -173,6 +173,13 @@ public class BookController {
 
     }
 
+    @GetMapping("/newest")
+    List<DisplayBookDto> getNewestBooks(){
+
+        return bookService.findNewest10Books();
+
+    }
+
 
 
 

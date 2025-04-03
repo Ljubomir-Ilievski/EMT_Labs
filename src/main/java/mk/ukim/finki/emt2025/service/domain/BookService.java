@@ -23,5 +23,7 @@ public interface BookService {
 
     List<Book> findByIsSoftDeleted();
 
+    List<Book> findNewest10Books();
+
 
 }

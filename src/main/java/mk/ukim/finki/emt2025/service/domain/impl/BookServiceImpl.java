@@ -91,4 +91,9 @@ public class BookServiceImpl implements BookService {
     public List<Book> findByIsSoftDeleted() {
         return bookRepository.findByIsSoftDeleted(false);
     }
+
+    @Override
+    public List<Book> findNewest10Books() {
+        return bookRepository.findTop10ByOrderByDatePublishedDesc();
+    }
 }

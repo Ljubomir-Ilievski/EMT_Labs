@@ -14,6 +14,8 @@ import mk.ukim.finki.emt2025.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 @Component
 public class DataInitializer {
 
@@ -49,11 +51,11 @@ public class DataInitializer {
         Author author5 = authorRepository.save(new Author("Giovanni", "Rossi", italy));
 
         // Initialize books
-        bookRepository.save(new Book("The Great Adventure", CategoryBook.NOVEL, 0, author1));
-        bookRepository.save(new Book("History of Europe", CategoryBook.HISTORY, 5, author2));
-        bookRepository.save(new Book("A little bit of drama", CategoryBook.DRAMA, 8, author3));
-        bookRepository.save(new Book("Alien War", CategoryBook.FANTASY, 12, author4));
-        bookRepository.save(new Book("The Art of War", CategoryBook.CLASSICS, 7, author5));
+        bookRepository.save(new Book("The Great Adventure", CategoryBook.NOVEL, 0, author1, LocalDate.of(2022, 5, 2)));
+        bookRepository.save(new Book("History of Europe", CategoryBook.HISTORY, 5, author2, LocalDate.of(2015, 5, 2)));
+        bookRepository.save(new Book("A little bit of drama", CategoryBook.DRAMA, 8, author3, LocalDate.of(2012, 2, 2)));
+        bookRepository.save(new Book("Alien War", CategoryBook.FANTASY, 12, author4, LocalDate.of(2010, 2, 2)));
+        bookRepository.save(new Book("The Art of War", CategoryBook.CLASSICS, 7, author5, LocalDate.of(2005, 2, 2)));
 
 
         userRepository.save(new User(

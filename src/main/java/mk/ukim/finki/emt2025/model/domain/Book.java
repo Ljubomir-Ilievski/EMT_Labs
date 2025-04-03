@@ -4,6 +4,8 @@ package mk.ukim.finki.emt2025.model.domain;
 import jakarta.persistence.*;
 import mk.ukim.finki.emt2025.model.Enumerations.CategoryBook;
 
+import java.time.LocalDate;
+
 
 @Entity
 public class Book {
@@ -31,7 +33,17 @@ public class Book {
 
     Boolean isSoftDeleted;
 
+    LocalDate datePublished;
 
+
+    public Book(String name, CategoryBook category, Integer availableCopies, Author author, LocalDate datePublished) {
+        this.name =  name;
+        this.category = category;
+        this.availableCopies = availableCopies;
+        this.author = author;
+        this.isSoftDeleted = false;
+        this.datePublished = datePublished;
+    }
     public Book(String name, CategoryBook category, Integer availableCopies, Author author) {
         this.name =  name;
         this.category = category;
@@ -42,6 +54,10 @@ public class Book {
 
     public Book() {
 
+    }
+
+    public LocalDate getDatePublished() {
+        return datePublished;
     }
 
     public Long getId() {
