@@ -2,6 +2,7 @@ package mk.ukim.finki.emt2025.service.application;
 
 import mk.ukim.finki.emt2025.model.dto.CreateAuthorDto;
 import mk.ukim.finki.emt2025.model.dto.DisplayAuthorDto;
+import mk.ukim.finki.emt2025.model.projections.NameSurnameAuthorProjectionDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,4 +17,6 @@ public interface AuthorApplicationService {
     Optional<DisplayAuthorDto> save(CreateAuthorDto createAuthorDto);
 
     Optional<DisplayAuthorDto> deleteById(Long id);
+
+    List<NameSurnameAuthorProjectionDto> NameSurnameProjection();
 }

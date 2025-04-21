@@ -5,14 +5,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import mk.ukim.finki.emt2025.model.dto.CreateUserDto;
-import mk.ukim.finki.emt2025.model.dto.DisplayBookDto;
-import mk.ukim.finki.emt2025.model.dto.DisplayUserDto;
-import mk.ukim.finki.emt2025.model.dto.LoginUserDto;
+import mk.ukim.finki.emt2025.model.dto.*;
 import mk.ukim.finki.emt2025.model.exceptions.*;
+import mk.ukim.finki.emt2025.security.JwtFilter;
 import mk.ukim.finki.emt2025.service.application.UserApplicationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -59,19 +58,17 @@ public class UserController {
             ), @ApiResponse(responseCode = "404", description = "Invalid username or password")}
     )
 
-    //OVA NE SE SLUCUVA NIKOGAS
-    @PostMapping("/login")
-    public ResponseEntity<DisplayUserDto> login(HttpServletRequest request) {
-        try {
-            DisplayUserDto displayUserDto = userApplicationService.login(
-                    new LoginUserDto(request.getParameter("username"), request.getParameter("password"))
-            ).orElseThrow(InvalidUserCredentialsException::new);
 
-            request.getSession().setAttribute("user", displayUserDto.toUser());
-            return ResponseEntity.ok(displayUserDto);
-        } catch (InvalidUserCredentialsException e) {
+    @PostMapping("/login")
+    public ResponseEntity<LoginRegisterResponseDto> login(@RequestBody LoginUserDto loginUserDto) {
+        try {
+            return userApplicationService.login(loginUserDto)
+                    .map(ResponseEntity::ok)
+                    .orElseThrow(InvalidUserCredentialsException::new);
+        } catch (InvalidUserCredentialsException | UsernameNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
+
     }
 
     @Operation(summary = "User logout", description = "Ends the user's session")
@@ -82,10 +79,10 @@ public class UserController {
     }
 
     @PutMapping("/wishlist/{id}")
-    ResponseEntity<Void> addToWishList(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+    ResponseEntity<Void> addToWishList(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String token) {
 
        try {
-           userApplicationService.addToWishList(userDetails.getUsername(), id);
+           userApplicationService.addToWishList(token, id);
            return ResponseEntity.ok().build();
 
        }
@@ -99,10 +96,10 @@ public class UserController {
     }
 
     @GetMapping("/wishlist")
-    ResponseEntity<List<DisplayBookDto>> listWishListed(@AuthenticationPrincipal UserDetails userDetails) {
+    ResponseEntity<List<DisplayBookDto>> listWishListed(@RequestHeader(value = "Authorization", required = false) String token) {
 
         try {
-            List<DisplayBookDto> displayBookDtoList =  userApplicationService.listWishListed(userDetails.getUsername());
+            List<DisplayBookDto> displayBookDtoList =  userApplicationService.listWishListed(token);
             return ResponseEntity.ok(displayBookDtoList);
 
         }
@@ -113,16 +110,23 @@ public class UserController {
     }
 
     @PutMapping("/wishlist/rentAll")
-    ResponseEntity<List<DisplayBookDto>> rentAllWishListed(@AuthenticationPrincipal UserDetails userDetails) {
+    ResponseEntity<List<DisplayBookDto>> rentAllWishListed(@RequestHeader(value = "Authorization", required = false) String token) {
 
         try {
-            userApplicationService.rentAllWishListed(userDetails.getUsername());
+            userApplicationService.rentAllWishListed(token);
             return ResponseEntity.ok().build();
 
         }
         catch (UsernameNotFoundException usernameNotFoundException){
             return ResponseEntity.notFound().build();
         }
+
+    }
+
+    @GetMapping()
+    List<DisplayUserDto> userList() {
+
+        return userApplicationService.listUsersLazyWishListed();
 
     }
 

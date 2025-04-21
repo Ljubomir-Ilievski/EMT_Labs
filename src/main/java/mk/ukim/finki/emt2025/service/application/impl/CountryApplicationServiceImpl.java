@@ -4,10 +4,11 @@ import mk.ukim.finki.emt2025.model.dto.*;
 import mk.ukim.finki.emt2025.service.application.CountryApplicationService;
 import mk.ukim.finki.emt2025.service.domain.BookService;
 import mk.ukim.finki.emt2025.service.domain.CountryService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
+@Service
 public class CountryApplicationServiceImpl implements CountryApplicationService {
     private final CountryService countryService;
 

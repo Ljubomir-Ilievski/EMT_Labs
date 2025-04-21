@@ -2,8 +2,12 @@ package mk.ukim.finki.emt2025.service.domain.impl;
 
 import mk.ukim.finki.emt2025.model.domain.Country;
 import mk.ukim.finki.emt2025.model.dto.CreateCountryDto;
+import mk.ukim.finki.emt2025.model.events.RefreshAuthorPerCountryViewEvent;
+import mk.ukim.finki.emt2025.model.views.AuthorsPerCountryView;
+import mk.ukim.finki.emt2025.repository.AuthorsPerCountryRepository;
 import mk.ukim.finki.emt2025.repository.CountryRepository;
 import mk.ukim.finki.emt2025.service.domain.CountryService;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,9 +16,11 @@ import java.util.Optional;
 @Service
 public class CountryServiceImpl implements CountryService {
     private final CountryRepository countryRepository;
+    private final AuthorsPerCountryRepository authorsPerCountryRepository;
 
-    public CountryServiceImpl(CountryRepository countryRepository) {
+    public CountryServiceImpl(CountryRepository countryRepository, AuthorsPerCountryRepository authorsPerCountryRepository) {
         this.countryRepository = countryRepository;
+        this.authorsPerCountryRepository = authorsPerCountryRepository;
     }
 
     @Override
@@ -57,4 +63,16 @@ public class CountryServiceImpl implements CountryService {
         countryRepository.deleteById(id);
         return optionalCountry;
     }
+
+    @Override
+    public List<AuthorsPerCountryView> authorsPerCountry() {
+        return authorsPerCountryRepository.findAll();
+    }
+
+    @Override
+    @EventListener()
+    public void RefreshAuthorsPerCountryView(RefreshAuthorPerCountryViewEvent event){
+        authorsPerCountryRepository.refreshMaterializedView();
+    }
+
 }

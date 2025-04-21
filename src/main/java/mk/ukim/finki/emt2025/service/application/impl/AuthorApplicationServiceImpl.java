@@ -2,12 +2,15 @@ package mk.ukim.finki.emt2025.service.application.impl;
 
 import mk.ukim.finki.emt2025.model.dto.CreateAuthorDto;
 import mk.ukim.finki.emt2025.model.dto.DisplayAuthorDto;
+import mk.ukim.finki.emt2025.model.projections.NameSurnameAuthorProjectionDto;
 import mk.ukim.finki.emt2025.service.application.AuthorApplicationService;
 import mk.ukim.finki.emt2025.service.domain.AuthorService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class AuthorApplicationServiceImpl implements AuthorApplicationService {
 
     public final AuthorService authorService;
@@ -39,5 +42,10 @@ public class AuthorApplicationServiceImpl implements AuthorApplicationService {
     @Override
     public Optional<DisplayAuthorDto> deleteById(Long id) {
         return authorService.deleteById(id).map(DisplayAuthorDto::from);
+    }
+
+    @Override
+    public List<NameSurnameAuthorProjectionDto> NameSurnameProjection() {
+        return authorService.NameSurnameProjection();
     }
 }

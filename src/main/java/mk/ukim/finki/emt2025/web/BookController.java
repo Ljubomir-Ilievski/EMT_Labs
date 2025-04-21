@@ -5,20 +5,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import mk.ukim.finki.emt2025.model.domain.Book;
 import mk.ukim.finki.emt2025.model.dto.CreateBookDto;
 import mk.ukim.finki.emt2025.model.dto.DisplayBookDto;
+import mk.ukim.finki.emt2025.model.views.BooksPerAuthorView;
+import mk.ukim.finki.emt2025.repository.BooksPerAuthorRepository;
 import mk.ukim.finki.emt2025.service.application.BookApplicationService;
-import mk.ukim.finki.emt2025.service.domain.impl.BookServiceImpl;
+import mk.ukim.finki.emt2025.service.domain.AuthorService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 //http://localhost:8080/swagger-ui/index.html#/
 @RestController
@@ -27,9 +22,11 @@ import java.util.List;
 public class BookController {
 
     private final BookApplicationService bookService;
+    private final AuthorService authorService;
 
-    public BookController(BookApplicationService bookService) {
+    public BookController(BookApplicationService bookService, AuthorService authorService) {
         this.bookService = bookService;
+        this.authorService = authorService;
     }
 
 
@@ -178,6 +175,13 @@ public class BookController {
 
         return bookService.findNewest10Books();
 
+    }
+
+    @GetMapping("/by-author")
+    List<BooksPerAuthorView> getBookCountPerAuthor(){
+        List<BooksPerAuthorView> booksPerAuthorViews = authorService.bookCountPerAuthor();
+        //booksPerAuthorViews.get(0).getNumber_of_books();
+        return booksPerAuthorViews;
     }
 
 

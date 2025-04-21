@@ -3,8 +3,12 @@ package mk.ukim.finki.emt2025.service.domain.impl;
 
 import mk.ukim.finki.emt2025.model.domain.Author;
 import mk.ukim.finki.emt2025.model.dto.CreateAuthorDto;
+import mk.ukim.finki.emt2025.model.projections.NameSurnameAuthorProjectionDto;
+import mk.ukim.finki.emt2025.model.views.BooksPerAuthorView;
 import mk.ukim.finki.emt2025.repository.AuthorRepository;
+import mk.ukim.finki.emt2025.repository.BooksPerAuthorRepository;
 import mk.ukim.finki.emt2025.service.domain.AuthorService;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,10 +19,12 @@ public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
     private final CountryServiceImpl countryService;
+    private final BooksPerAuthorRepository booksPerAuthorRepository;
 
-    public AuthorServiceImpl(AuthorRepository authorRepository, CountryServiceImpl countryService) {
+    public AuthorServiceImpl(AuthorRepository authorRepository, CountryServiceImpl countryService, BooksPerAuthorRepository booksPerAuthorRepository) {
         this.authorRepository = authorRepository;
         this.countryService = countryService;
+        this.booksPerAuthorRepository = booksPerAuthorRepository;
     }
 
     @Override
@@ -65,4 +71,22 @@ public class AuthorServiceImpl implements AuthorService {
         authorRepository.deleteById(id);
         return authorOptional;
     }
+
+    @Override
+    public List<BooksPerAuthorView> bookCountPerAuthor() {
+        List<BooksPerAuthorView> booksPerAuthorViews = booksPerAuthorRepository.findAll();
+        return booksPerAuthorRepository.findAll();
+    }
+
+    @Scheduled(cron = "0 0 * * * *")
+    @Override
+    public void RefreshMaterialisedBookCounts() {
+        booksPerAuthorRepository.refreshMaterializedView();
+    }
+
+    @Override
+    public List<NameSurnameAuthorProjectionDto> NameSurnameProjection() {
+        return authorRepository.nameSurnameProjection();
+    }
+
 }

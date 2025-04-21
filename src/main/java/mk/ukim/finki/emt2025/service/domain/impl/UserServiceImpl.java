@@ -6,6 +6,8 @@ import mk.ukim.finki.emt2025.model.Enumerations.Role;
 import mk.ukim.finki.emt2025.model.exceptions.*;
 import mk.ukim.finki.emt2025.repository.BookRepository;
 import mk.ukim.finki.emt2025.repository.UserRepository;
+import mk.ukim.finki.emt2025.security.JwtConstants;
+import mk.ukim.finki.emt2025.security.JwtHelper;
 import mk.ukim.finki.emt2025.service.domain.BookService;
 import mk.ukim.finki.emt2025.service.domain.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,12 +25,15 @@ public class UserServiceImpl implements UserService {
     private final BookService bookService;
     private final BookRepository bookRepository;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, BookService bookService, BookRepository bookRepository) {
+    private final JwtHelper jwtHelper;
+
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, BookService bookService, BookRepository bookRepository, JwtHelper jwtHelper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.bookService = bookService;
 
         this.bookRepository = bookRepository;
+        this.jwtHelper = jwtHelper;
     }
 
     @Override
@@ -68,13 +73,20 @@ public class UserServiceImpl implements UserService {
         if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
             throw new InvalidArgumentsException();
         }
-        return userRepository.findByUsernameAndPassword(username, password).orElseThrow(
-                InvalidUserCredentialsException::new);
+
+        User user = userRepository.findByUsername(username).orElseThrow(InvalidUsernameOrPasswordException::new);
+
+        if (!passwordEncoder.matches(password, user.getPassword()))
+            throw new InvalidUserCredentialsException();
+
+        return user;
     }
 
 
     @Override
-    public void addToWishList(String username, Long bookId) throws NoAvailableBooksException {
+    public void addToWishList(String token, Long bookId) throws NoAvailableBooksException {
+       String username = jwtHelper.extractUsername(token.substring(JwtConstants.TOKEN_PREFIX.length()));
+
        User user =  findByUsername(username);
        Book book =  bookService.findById(bookId).orElseThrow(() -> new BookNotFoundExepction(bookId));
 
@@ -88,19 +100,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Book> listWishListed(String username) {
+    public List<Book> listWishListed(String token) {
+        String username = jwtHelper.extractUsername(token.substring(JwtConstants.TOKEN_PREFIX.length()));
        User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
        return user.getWishListedBooks();
     }
 
     @Override
-    public void rentAllWishListed(String username) {
+    public void rentAllWishListed(String token) {
+        String username = jwtHelper.extractUsername(token.substring(JwtConstants.TOKEN_PREFIX.length()));
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
 
         user.getWishListedBooks().forEach(book -> {book.setAvailableCopies(book.getAvailableCopies() - 1);
                                                     bookRepository.save(book);});
 
 
+    }
+
+    @Override
+    public List<User> listUsersLazyWishListed() {
+        List<User> userlist = userRepository.findAllLazyWishListed();
+        return userRepository.findAllLazyWishListed();
     }
 
 

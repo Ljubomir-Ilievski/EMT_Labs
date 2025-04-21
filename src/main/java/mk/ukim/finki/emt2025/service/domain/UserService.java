@@ -17,11 +17,13 @@ public interface UserService extends UserDetailsService {
 
     User findByUsername(String username);
 
-    void addToWishList(String username, Long bookId) throws NoAvailableBooksException;
+    void addToWishList(String token, Long bookId) throws NoAvailableBooksException;
 
-    List<Book> listWishListed(String username);
+    List<Book> listWishListed(String token);
 
-    void rentAllWishListed(String username);
+    void rentAllWishListed(String token);
+
+    List<User> listUsersLazyWishListed();
 
 }
 

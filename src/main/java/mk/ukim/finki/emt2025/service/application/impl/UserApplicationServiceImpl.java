@@ -1,11 +1,9 @@
 package mk.ukim.finki.emt2025.service.application.impl;
 
 import mk.ukim.finki.emt2025.model.domain.User;
-import mk.ukim.finki.emt2025.model.dto.CreateUserDto;
-import mk.ukim.finki.emt2025.model.dto.DisplayBookDto;
-import mk.ukim.finki.emt2025.model.dto.DisplayUserDto;
-import mk.ukim.finki.emt2025.model.dto.LoginUserDto;
+import mk.ukim.finki.emt2025.model.dto.*;
 import mk.ukim.finki.emt2025.model.exceptions.NoAvailableBooksException;
+import mk.ukim.finki.emt2025.security.JwtHelper;
 import mk.ukim.finki.emt2025.service.application.UserApplicationService;
 import mk.ukim.finki.emt2025.service.domain.UserService;
 import org.springframework.stereotype.Service;
@@ -17,9 +15,11 @@ import java.util.Optional;
 public class UserApplicationServiceImpl implements UserApplicationService {
 
     private final UserService userService;
+    private final JwtHelper jwtHelper;
 
-    public UserApplicationServiceImpl(UserService userService) {
+    public UserApplicationServiceImpl(UserService userService, JwtHelper jwtHelper) {
         this.userService = userService;
+        this.jwtHelper = jwtHelper;
     }
 
     @Override
@@ -36,11 +36,12 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     }
 
     @Override
-    public Optional<DisplayUserDto> login(LoginUserDto loginUserDto) {
-        return Optional.of(DisplayUserDto.from(userService.login(
-                loginUserDto.username(),
-                loginUserDto.password()
-        )));
+    public Optional<LoginRegisterResponseDto> login(LoginUserDto loginUserDto) {
+        User currentUser = userService.findByUsername(loginUserDto.username());
+
+        currentUser = userService.login(loginUserDto.username(), loginUserDto.password());
+
+        return Optional.of(new LoginRegisterResponseDto(jwtHelper.generateToken(currentUser)));
     }
 
     @Override
@@ -49,18 +50,23 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     }
 
     @Override
-    public void addToWishList(String username, Long bookId) throws NoAvailableBooksException {
-        userService.addToWishList(username, bookId);
+    public void addToWishList(String token, Long bookId) throws NoAvailableBooksException {
+        userService.addToWishList(token, bookId);
     }
 
     @Override
-    public List<DisplayBookDto> listWishListed(String username) {
-        return DisplayBookDto.from(userService.listWishListed(username));
+    public List<DisplayBookDto> listWishListed(String token) {
+        return DisplayBookDto.from(userService.listWishListed(token));
     }
 
     @Override
-    public void rentAllWishListed(String username) {
-        userService.rentAllWishListed(username);
+    public void rentAllWishListed(String token) {
+        userService.rentAllWishListed(token);
+    }
+
+    @Override
+    public List<DisplayUserDto> listUsersLazyWishListed() {
+        return DisplayUserDto.from(userService.listUsersLazyWishListed());
     }
 
 

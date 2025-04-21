@@ -54,7 +54,7 @@ public class User implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Book> wishListedBooks;
 
     public List<Book> getWishListedBooks() {
