@@ -43,6 +43,11 @@ public class JwtHelper {
         return extractClaim(token, Claims::getExpiration);
     }
 
+    public Date extractIssuedAtDate(String token) {
+        return extractClaim(token, Claims::getIssuedAt);
+    }
+
+
     private String buildToken(
             Map<String, Object> extraClaims,
             String subject

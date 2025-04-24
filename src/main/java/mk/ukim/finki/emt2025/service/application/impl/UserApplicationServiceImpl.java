@@ -7,6 +7,7 @@ import mk.ukim.finki.emt2025.security.JwtHelper;
 import mk.ukim.finki.emt2025.service.application.UserApplicationService;
 import mk.ukim.finki.emt2025.service.domain.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +40,11 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     public Optional<LoginRegisterResponseDto> login(LoginUserDto loginUserDto) {
         User currentUser = userService.findByUsername(loginUserDto.username());
 
-        currentUser = userService.login(loginUserDto.username(), loginUserDto.password());
+
+
+        String token = userService.login(loginUserDto.username(), loginUserDto.password());
+
+
 
         return Optional.of(new LoginRegisterResponseDto(jwtHelper.generateToken(currentUser)));
     }
@@ -67,6 +72,11 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     @Override
     public List<DisplayUserDto> listUsersLazyWishListed() {
         return DisplayUserDto.from(userService.listUsersLazyWishListed());
+    }
+
+    @Override
+    public List<DisplayTokenInfoDto> listTokenLogsList() {
+        return DisplayTokenInfoDto.from(userService.listTokenLogsList());
     }
 
 

@@ -130,5 +130,12 @@ public class UserController {
 
     }
 
+    @GetMapping("/auth-logs")
+    public List<DisplayTokenInfoDto> tokenInfoDtoList(){
+
+        return userApplicationService.listTokenLogsList();
+
+    }
+
 }
 

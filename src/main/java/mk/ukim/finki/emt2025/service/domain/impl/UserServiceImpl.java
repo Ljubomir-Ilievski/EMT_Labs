@@ -1,10 +1,12 @@
 package mk.ukim.finki.emt2025.service.domain.impl;
 
 import mk.ukim.finki.emt2025.model.domain.Book;
+import mk.ukim.finki.emt2025.model.domain.TokenLog;
 import mk.ukim.finki.emt2025.model.domain.User;
 import mk.ukim.finki.emt2025.model.Enumerations.Role;
 import mk.ukim.finki.emt2025.model.exceptions.*;
 import mk.ukim.finki.emt2025.repository.BookRepository;
+import mk.ukim.finki.emt2025.repository.TokenLogRepository;
 import mk.ukim.finki.emt2025.repository.UserRepository;
 import mk.ukim.finki.emt2025.security.JwtConstants;
 import mk.ukim.finki.emt2025.security.JwtHelper;
@@ -25,14 +27,17 @@ public class UserServiceImpl implements UserService {
     private final BookService bookService;
     private final BookRepository bookRepository;
 
+    private final TokenLogRepository tokenLogRepository;
+
     private final JwtHelper jwtHelper;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, BookService bookService, BookRepository bookRepository, JwtHelper jwtHelper) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, BookService bookService, BookRepository bookRepository, TokenLogRepository tokenLogRepository, JwtHelper jwtHelper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.bookService = bookService;
 
         this.bookRepository = bookRepository;
+        this.tokenLogRepository = tokenLogRepository;
         this.jwtHelper = jwtHelper;
     }
 
@@ -69,7 +74,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User login(String username, String password) {
+    public String login(String username, String password) {
+
+
+
         if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
             throw new InvalidArgumentsException();
         }
@@ -79,7 +87,11 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(password, user.getPassword()))
             throw new InvalidUserCredentialsException();
 
-        return user;
+        String token = jwtHelper.generateToken(user);
+        tokenLogRepository.save(new TokenLog(token, jwtHelper.extractIssuedAtDate(token), jwtHelper.extractExpiration(token), user));
+
+
+        return token;
     }
 
 
@@ -121,6 +133,11 @@ public class UserServiceImpl implements UserService {
     public List<User> listUsersLazyWishListed() {
         List<User> userlist = userRepository.findAllLazyWishListed();
         return userRepository.findAllLazyWishListed();
+    }
+
+    @Override
+    public List<TokenLog> listTokenLogsList() {
+        return tokenLogRepository.findAll();
     }
 
 
