@@ -1,11 +1,11 @@
 import {useEffect, useState} from "react";
-import manufacturerRepository from "../repository/manufacturerRepository.js";
+import countryRepository from "../repository/countryRepository.js";
 
-const useManufacturers = () => {
+const useCountries = () => {
     const [manufacturers, setManufacturers] = useState([]);
 
     useEffect(() => {
-        manufacturerRepository
+        countryRepository
             .findAll()
             .then((response) => {
                 setManufacturers(response.data);
@@ -16,4 +16,4 @@ const useManufacturers = () => {
     return manufacturers;
 };
 
-export default useManufacturers;
+export default useCountries;

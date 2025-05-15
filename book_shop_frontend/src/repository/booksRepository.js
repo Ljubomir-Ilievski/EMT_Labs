@@ -1,21 +1,21 @@
 import axiosInstance from "../axios/axios.js";
 
-const productRepository = {
+const booksRepository = {
     findAll: async () => {
-        return await axiosInstance.get("/products");
+        return await axiosInstance.get("/books");
     },
     findById: async (id) => {
-        return await axiosInstance.get(`/products/${id}`);
+        return await axiosInstance.get(`/books/${id}`);
     },
     add: async (data) => {
-      return await axiosInstance.post("/products/add", data);
+      return await axiosInstance.post("/books/add", data);
     },
     edit: async (id, data) => {
-     return await axiosInstance.put(`/products/edit/${id}`, data);
+     return await axiosInstance.put(`/books/update/${id}`, data);
     },
     delete: async (id) => {
-        return await axiosInstance.delete(`/products/delete/${id}`);
+        return await axiosInstance.delete(`/books/delete/${id}`);
     },
 };
 
-export default productRepository;
+export default booksRepository;

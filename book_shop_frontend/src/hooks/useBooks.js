@@ -1,20 +1,20 @@
 import {useCallback, useEffect, useState} from "react";
-import productRepository from "../repository/productRepository.js";
+import booksRepository from "../repository/booksRepository.js";
 
 const initialState = {
-    "products": [],
+    "books": [],
     "loading": true,
 };
 
-const useProducts = () => {
+const useBooks = () => {
     const [state, setState] = useState(initialState);
 
-    const fetchProducts = useCallback(() => {
-        productRepository
+    const fetchBooks = useCallback(() => {
+        booksRepository
             .findAll()
             .then((response) => {
                 setState({
-                    "products": response.data,
+                    "books": response.data,
                     "loading": false,
                 });
             })
@@ -22,40 +22,40 @@ const useProducts = () => {
     }, []);
 
     const onAdd = useCallback((data) => {
-        productRepository
+        booksRepository
             .add(data)
             .then(() => {
-                console.log("Successfully added a new product.");
-                fetchProducts();
+                console.log("Successfully added a new book.");
+                fetchBooks();
             })
             .catch((error) => console.log(error));
-    }, [fetchProducts]);
+    }, [fetchBooks]);
 
     const onEdit = useCallback((id, data) => {
-        productRepository
+        booksRepository
             .edit(id, data)
             .then(() => {
-                console.log(`Successfully edited the product with ID ${id}.`);
-                fetchProducts();
+                console.log(`Successfully edited the book with ID ${id}.`);
+                fetchBooks();
             })
             .catch((error) => console.log(error));
-    }, [fetchProducts]);
+    }, [fetchBooks]);
 
     const onDelete = useCallback((id) => {
-        productRepository
+        booksRepository
             .delete(id)
             .then(() => {
-                console.log(`Successfully deleted the product with ID ${id}.`);
-                fetchProducts();
+                console.log(`Successfully deleted the book with ID ${id}.`);
+                fetchBooks();
             })
             .catch((error) => console.log(error));
-    }, [fetchProducts]);
+    }, [fetchBooks]);
 
     useEffect(() => {
-        fetchProducts();
-    }, [fetchProducts]);
+        fetchBooks();
+    }, [fetchBooks]);
 
     return {...state, onAdd: onAdd, onEdit: onEdit, onDelete: onDelete};
 };
 
-export default useProducts;
+export default useBooks;

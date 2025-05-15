@@ -6,7 +6,7 @@ const HomePage = () => {
         <Box sx={{m:"2rem", p:"2rem"}}>
             <Container maxWidth="xl" sx={{mt:3, py: 3}}>
                 <Typography variant="h4" gutterBottom>
-                    Welcome to E-Shop App! 👋
+                    Welcome to the library! 📚📚📚
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 4 }}>
                     This is the home page.

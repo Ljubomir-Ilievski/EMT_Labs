@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import {Box, Button, CircularProgress} from "@mui/material";
-import ProductsGrid from "../../components/books/BooksGrid/ProductsGrid.jsx";
+import BooksGrid from "../../components/books/BooksGrid/BooksGrid.jsx";
 import useBooks from "../../../hooks/useBooks.js";
-import "./ProductsPage.css";
+import "./BooksPage.css";
 import AddBookDialog from "../../components/books/AddBookDialog/AddBookDialog.jsx";
 
-const ProductsPage = () => {
-    const {products, loading, onAdd, onEdit, onDelete} = useBooks();
+const BooksPage = () => {
+    const {books, loading, onAdd, onEdit, onDelete} = useBooks();
     const [addProductDialogOpen, setAddProductDialogOpen] = useState(false);
 
     return (
@@ -21,10 +21,10 @@ const ProductsPage = () => {
                     <>
                         <Box sx={{display: "flex", justifyContent: "flex-end", mb: 2}}>
                             <Button variant="contained" color="primary" onClick={() => setAddProductDialogOpen(true)}>
-                                Add Product
+                                Add Book
                             </Button>
                         </Box>
-                        <ProductsGrid products={products} onEdit={onEdit} onDelete={onDelete}/>
+                        <BooksGrid books={books} onEdit={onEdit} onDelete={onDelete}/>
                     </>}
             </Box>
             <AddBookDialog
@@ -36,4 +36,4 @@ const ProductsPage = () => {
     );
 };
 
-export default ProductsPage;
+export default BooksPage;

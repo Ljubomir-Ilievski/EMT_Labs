@@ -1,6 +1,6 @@
 import axiosInstance from "../axios/axios.js";
 
-const manufacturerRepository = {
+const countryRepository = {
     findAll: async () => {
         return await axiosInstance.get("/manufacturers");
     },
@@ -9,4 +9,4 @@ const manufacturerRepository = {
     },
 };
 
-export default manufacturerRepository;
+export default countryRepository;

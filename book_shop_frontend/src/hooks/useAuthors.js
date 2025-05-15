@@ -1,19 +1,19 @@
 import {useEffect, useState} from "react";
-import categoryRepository from "../repository/categoryRepository.js";
+import authorRepositroy from "../repository/authorRepositroy.js";
 
-const useCategories = () => {
-    const [categories, setCategories] = useState([]);
+const useAuthors = () => {
+    const [authors, setAuthors] = useState([]);
 
     useEffect(() => {
-        categoryRepository
+        authorRepositroy
             .findAll()
             .then((response) => {
-                setCategories(response.data);
+                setAuthors(response.data);
             })
             .catch((error) => console.log(error));
     }, []);
 
-    return categories;
+    return authors;
 };
 
-export default useCategories;
+export default useAuthors;

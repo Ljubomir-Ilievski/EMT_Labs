@@ -1,12 +1,13 @@
 import axiosInstance from "../axios/axios.js";
 
-const categoryRepository = {
+const authorRepositroy = {
     findAll: async () => {
-        return await axiosInstance.get("/categories");
+        return await axiosInstance.get("/authors");
     },
     findById: async (id) => {
-        return await axiosInstance.get(`/categories/${id}`);
+        return await axiosInstance.get(`/authors/${id
+        }`);
     },
 };
 
-export default categoryRepository;
+export default authorRepositroy;

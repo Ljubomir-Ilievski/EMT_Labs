@@ -41,6 +41,29 @@ public class AuthorController{
         return displayAuthorDtoResponseEntity;
     }
 
+    @Operation(summary = "List All Authors", description = "Returns a list of all authors.")
+    @GetMapping
+    public List<DisplayAuthorDto> findAll() {
+        return authorApplicationService.findAll();
+    }
+
+    @Operation(summary = "Find Author by ID", description = "Returns a single author by its ID.")
+    @GetMapping("/{id}")
+    public ResponseEntity<DisplayAuthorDto> findById(@PathVariable Long id) {
+        return authorApplicationService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+
+    @Operation(summary = "Delete Author", description = "Deletes an author by ID.")
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        authorApplicationService.deleteById(id);
+        applicationEventPublisher.publishEvent(new RefreshAuthorPerCountryViewEvent());
+        return ResponseEntity.ok().build();
+    }
+
     @Operation(summary = "Get authorsPerCountry", description = "Get the number of authors per country")
     @GetMapping(value = "/by-country")
     public List<AuthorsPerCountryView> authorsPerCountryViews(){

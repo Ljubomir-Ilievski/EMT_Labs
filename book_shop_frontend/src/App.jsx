@@ -1,9 +1,9 @@
 import React from 'react';
-import ProductsPage from "./ui/pages/ProductsPage/ProductsPage.jsx";
+import BooksPage from "./ui/pages/ProductsPage/BooksPage.jsx";
 import {BrowserRouter, Routes, Route} from "react-router";
 import Layout from "./ui/components/layout/Layout/Layout.jsx";
 import HomePage from "./ui/pages/HomePage/HomePage.jsx";
-import ProductDetails from "./ui/components/products/ProductDetails/ProductDetails.jsx";
+import {LoginPage} from "./ui/pages/LoginPage/LoginPage.jsx";
 
 const App = () => {
     return (
@@ -11,8 +11,9 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Layout/>}>
                     <Route index element={<HomePage/>}/>
-                    <Route path="products" element={<ProductsPage/>}/>
-                    <Route path="products/:id" element={<ProductDetails/>}/>
+                    <Route path="books" element={<BooksPage/>}/>
+                    <Route path="login" element={<LoginPage/>}/>
+                    {/*<Route path="products/:id" element={<ProductDetails/>}/>*/}
                 </Route>
             </Routes>
         </BrowserRouter>

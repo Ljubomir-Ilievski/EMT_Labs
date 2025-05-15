@@ -12,7 +12,7 @@ public record DisplayBookDto(
         String name,
         CategoryBook category,
         Long author,
-        Integer avaibleCopies,
+        Integer availableCopies,
         LocalDate datePublished) {
 
     

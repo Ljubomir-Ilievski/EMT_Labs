@@ -10,7 +10,7 @@ import {
     TextField
 } from "@mui/material";
 import useAuthors from "../../../../hooks/useAuthors.js";
-import useCountries from "../../../../hooks/useCountries.js";
+//import useCountries from "../../../../hooks/useCountries.js";
 
 const initialFormData = {
     "name": "",
@@ -19,10 +19,9 @@ const initialFormData = {
     "author": "",
 };
 
-const AddProductDialog = ({open, onClose, onAdd}) => {
+const AddBookDialog = ({open, onClose, onAdd}) => {
     const [formData, setFormData] = useState(initialFormData);
     const authors = useAuthors();
-    const manufacturers = useCountries();
 
     const handleChange = (event) => {
         const {name, value} = event.target;
@@ -67,26 +66,13 @@ const AddProductDialog = ({open, onClose, onAdd}) => {
                 <FormControl fullWidth margin="dense">
                     <InputLabel>Author</InputLabel>
                     <Select
-                        name="categoryId"
-                        value={formData.categoryId}
+                        name="author"
+                        value={formData.author}
                         onChange={handleChange}
-                        label="Category"
+                        label="Author"
                         variant="outlined">
                         {authors.map((author) => (
                             <MenuItem key={author.id} value={author.id}>{author.name} {author.surname}</MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-                <FormControl fullWidth margin="dense">
-                    <InputLabel>Manufacturer</InputLabel>
-                    <Select
-                        name="manufacturerId"
-                        value={formData.manufacturerId}
-                        onChange={handleChange}
-                        label="Manufacturer"
-                        variant="outlined">
-                        {manufacturers.map((manufacturer) => (
-                            <MenuItem key={manufacturer.id} value={manufacturer.id}>{manufacturer.name}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>
@@ -99,4 +85,4 @@ const AddProductDialog = ({open, onClose, onAdd}) => {
     );
 };
 
-export default AddProductDialog;
+export default AddBookDialog;

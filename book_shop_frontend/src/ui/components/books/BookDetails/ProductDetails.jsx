@@ -1,3 +1,4 @@
+/*
 import React from 'react';
 import {useNavigate, useParams} from "react-router";
 import useProductDetails from "../../../../hooks/useProductDetails.js";
@@ -168,4 +169,4 @@ const ProductDetails = () => {
     );
 };
 
-export default ProductDetails;
+export default ProductDetails;*/

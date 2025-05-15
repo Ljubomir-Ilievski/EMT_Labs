@@ -5,8 +5,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import "./Header.css";
 
 const pages = [
-    {"path": "/", "name": "home"},
-    {"path": "/products", "name": "products"},
+    {"path": "/", "name": "Home"},
+    {"path": "/books", "name": "Books"},
 ];
 
 const Header = () => {
@@ -24,7 +24,7 @@ const Header = () => {
                         <MenuIcon/>
                     </IconButton>
                     <Typography variant="h6" component="div" sx={{mr: 3}}>
-                        E-SHOP
+                        BookStore
                     </Typography>
                     <Box sx={{flexGrow: 1, display: {xs: "none", md: "flex"}}}>
                         {pages.map((page) => (
@@ -37,7 +37,13 @@ const Header = () => {
                             </Link>
                         ))}
                     </Box>
-                    <Button color="inherit">Login</Button>
+                    <Link to={"/login"} color="inherit">
+                        <Button
+                            sx={{my: 2, color: "white", display: "block", textDecoration: "none"}}
+                        >
+                            LOGIN
+                        </Button>
+                    </Link>
                 </Toolbar>
             </AppBar>
         </Box>
