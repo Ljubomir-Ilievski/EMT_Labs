@@ -11,6 +11,7 @@ import mk.ukim.finki.emt2025.model.views.BooksPerAuthorView;
 import mk.ukim.finki.emt2025.repository.BooksPerAuthorRepository;
 import mk.ukim.finki.emt2025.service.application.BookApplicationService;
 import mk.ukim.finki.emt2025.service.domain.AuthorService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,16 +41,22 @@ public class BookController {
 
             }
     )
+    @GetMapping("/pagination")
+    List<DisplayBookDto> findAll(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "10") int size) {
+       return bookService.getPaginatedUsers(page, size);
+    }
+
     @GetMapping
-    List<DisplayBookDto> findAll(){
+    List<DisplayBookDto> findAll() {
         /*Iterator<String> httpIterator = httpServletRequest.getHeaderNames().asIterator();
         while (httpIterator.hasNext()){
             System.out.println(httpIterator.next());
        }*/
 
-       // System.out.println(userDetails.getUsername());
+        // System.out.println(userDetails.getUsername());
         //System.out.println((String) httpServletRequest.getSession().getAttribute("user"));
-       return bookService.findByIsSoftDeleted();
+        return bookService.findByIsSoftDeleted();
     }
 
 

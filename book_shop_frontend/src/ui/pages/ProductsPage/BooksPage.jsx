@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Box, Button, CircularProgress} from "@mui/material";
+import {Box, Button, CircularProgress, Pagination} from "@mui/material";
 import BooksGrid from "../../components/books/BooksGrid/BooksGrid.jsx";
 import useBooks from "../../../hooks/useBooks.js";
 import "./BooksPage.css";
@@ -8,6 +8,11 @@ import AddBookDialog from "../../components/books/AddBookDialog/AddBookDialog.js
 const BooksPage = () => {
     const {books, loading, onAdd, onEdit, onDelete} = useBooks();
     const [addProductDialogOpen, setAddProductDialogOpen] = useState(false);
+    const [page, setPage] = useState(1);
+
+    function handlePageChange(event, value){
+        setPage(value);
+    }
 
     return (
         <>
@@ -24,7 +29,11 @@ const BooksPage = () => {
                                 Add Book
                             </Button>
                         </Box>
+                        <Pagination count={3} shape="rounded"
+                                    onChange={handlePageChange}/>
+                        <br/>
                         <BooksGrid books={books} onEdit={onEdit} onDelete={onDelete}/>
+
                     </>}
             </Box>
             <AddBookDialog

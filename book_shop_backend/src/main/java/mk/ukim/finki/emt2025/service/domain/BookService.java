@@ -2,6 +2,7 @@ package mk.ukim.finki.emt2025.service.domain;
 
 import mk.ukim.finki.emt2025.model.domain.Book;
 import mk.ukim.finki.emt2025.model.dto.CreateBookDto;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,8 @@ public interface BookService {
     List<Book> findByIsSoftDeleted();
 
     List<Book> findNewest10Books();
+
+    Page<Book> getPaginatedUsers(int page, int size);
 
 
 }

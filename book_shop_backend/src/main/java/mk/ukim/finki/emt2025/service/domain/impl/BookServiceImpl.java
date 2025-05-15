@@ -5,6 +5,8 @@ import mk.ukim.finki.emt2025.model.domain.Book;
 import mk.ukim.finki.emt2025.model.dto.CreateBookDto;
 import mk.ukim.finki.emt2025.repository.BookRepository;
 import mk.ukim.finki.emt2025.service.domain.BookService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -95,5 +97,11 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> findNewest10Books() {
         return bookRepository.findTop10ByOrderByDatePublishedDesc();
+    }
+
+
+    public Page<Book> getPaginatedUsers(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return bookRepository.findAll(pageRequest);
     }
 }

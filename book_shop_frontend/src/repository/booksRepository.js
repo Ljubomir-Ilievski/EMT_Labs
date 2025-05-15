@@ -4,6 +4,9 @@ const booksRepository = {
     findAll: async () => {
         return await axiosInstance.get("/books");
     },
+    findPage: async (page, size) => {
+        return await axiosInstance.get("/books/pagination", {params: {page, size}});
+    },
     findById: async (id) => {
         return await axiosInstance.get(`/books/${id}`);
     },

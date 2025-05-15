@@ -2,6 +2,7 @@ package mk.ukim.finki.emt2025.model.dto;
 
 import mk.ukim.finki.emt2025.model.Enumerations.CategoryBook;
 import mk.ukim.finki.emt2025.model.domain.Book;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,6 +28,12 @@ public record DisplayBookDto(
         return books.stream().map(DisplayBookDto::from)
                 .collect(Collectors.toList());
     }
-    
 
+
+    public static List<DisplayBookDto> from(Page<Book> paginatedBooks) {
+        return paginatedBooks.getContent()
+                .stream()
+                .map(DisplayBookDto::from)
+                .collect(Collectors.toList());
+    }
 }

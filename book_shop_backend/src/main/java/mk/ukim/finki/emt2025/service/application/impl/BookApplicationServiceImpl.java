@@ -5,6 +5,8 @@ import mk.ukim.finki.emt2025.model.dto.CreateBookDto;
 import mk.ukim.finki.emt2025.model.dto.DisplayBookDto;
 import mk.ukim.finki.emt2025.service.application.BookApplicationService;
 import mk.ukim.finki.emt2025.service.domain.BookService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,5 +60,9 @@ public class BookApplicationServiceImpl  implements BookApplicationService {
     @Override
     public List<DisplayBookDto> findNewest10Books() {
         return DisplayBookDto.from(bookService.findNewest10Books());
+    }
+
+    public List<DisplayBookDto> getPaginatedUsers(int page, int size) {
+        return DisplayBookDto.from(bookService.getPaginatedUsers(page, size));
     }
 }
