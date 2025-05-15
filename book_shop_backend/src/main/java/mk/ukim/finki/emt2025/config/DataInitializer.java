@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
-@Component
+//@Component
 public class DataInitializer {
 
     private final CountryRepository countryRepository;

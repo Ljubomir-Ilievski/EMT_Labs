@@ -22,5 +22,7 @@ public interface UserApplicationService {
     void rentAllWishListed(String token);
 
     List<DisplayUserDto> listUsersLazyWishListed();
+
+    List<DisplayTokenInfoDto> listTokenLogsList();
 }
 
