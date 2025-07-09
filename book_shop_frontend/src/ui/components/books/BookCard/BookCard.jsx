@@ -3,8 +3,8 @@ import InfoIcon from '@mui/icons-material/Info';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Box, Button, Card, CardActions, CardContent, Typography} from "@mui/material";
-import EditbookDialog from "../EditbookDialog/EditbookDialog.jsx";
-import DeletebookDialog from "../DeletebookDialog/DeletebookDialog.jsx";
+import EditBookDialog from "../EditBookDialog/EditBookDialog.jsx"
+import DeleteBookDialog from "../DeleteBookDialog/DeleteBookDialog.jsx";
 import {useNavigate} from "react-router";
 
 const bookCard = ({book, onEdit, onDelete}) => {
@@ -47,13 +47,13 @@ const bookCard = ({book, onEdit, onDelete}) => {
                     </Box>
                 </CardActions>
             </Card>
-            <EditbookDialog
+            <EditBookDialog
                 open={editBookDialogOpen}
                 onClose={() => seteditBookDialogOpen(false)}
                 book={book}
                 onEdit={onEdit}
             />
-            <DeletebookDialog
+            <DeleteBookDialog
                 open={deleteBookDialogOpen}
                 onClose={() => setdeleteBookDialogOpen(false)}
                 book={book}
