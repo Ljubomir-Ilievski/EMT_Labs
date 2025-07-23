@@ -1,7 +1,8 @@
 import axios from "axios";
+import {backendUrl} from "../constants/constants.js";
 
 const axiosInstance = axios.create({
-    baseURL: "http://localhost:8080/api",
+    baseURL: backendUrl,
     headers: {
         "Content-Type": "application/json",
     },
