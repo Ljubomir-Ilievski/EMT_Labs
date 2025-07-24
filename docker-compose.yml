@@ -7,7 +7,6 @@ services:
       POSTGRES_PASSWORD: emt
       POSTGRES_DB: book_store
     volumes:
-#      - pgdata:/var/lib/postgresql/data
       - ./book_shop_backend/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./book_shop_backend/views.sql:/docker-entrypoint-initdb.d/views.sql
     ports:

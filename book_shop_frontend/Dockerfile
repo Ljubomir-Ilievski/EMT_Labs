@@ -3,8 +3,8 @@ FROM node:20-alpine as builder
 
 WORKDIR /app
 
-ARG VITE_BACKEND_HOST
-ARG VITE_BACKEND_PORT
+ARG VITE_BACKEND_HOST=backend.local
+ARG VITE_BACKEND_PORT=8080
 COPY package*.json ./
 RUN npm install
 COPY . .

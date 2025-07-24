@@ -21,7 +21,7 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ var.DOCKERHUB_USERNAME }}
+          username: ${{ vars.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Build and push backend image
@@ -30,7 +30,9 @@ jobs:
           context: ./book_shop_backend
           file: ./book_shop_backend/Dockerfile
           push: true
-          tags: ${{ env.IMAGE_BACKEND }}:latest
+          tags: | 
+            ${{ env.IMAGE_BACKEND }}:latest
+            ${{ env.IMAGE_BACKEND }}:${{ github.sha }}
 
       - name: Build and push frontend image
         uses: docker/build-push-action@v5
@@ -38,4 +40,8 @@ jobs:
           context: ./book_shop_frontend
           file: ./book_shop_frontend/Dockerfile
           push: true
-          tags: ${{ env.IMAGE_FRONTEND }}:latest
+          tags: | 
+            ${{ env.IMAGE_FRONTEND }}:latest
+            ${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
+
+
