@@ -1,6 +1,8 @@
 import axios from "axios";
 import {backendUrl} from "../constants/constants.js";
 
+console.log('backendUrl!!!!', backendUrl);
+
 const axiosInstance = axios.create({
     baseURL: backendUrl,
     headers: {

@@ -11,7 +11,6 @@ import mk.ukim.finki.emt2025.repository.AuthorRepository;
 import mk.ukim.finki.emt2025.repository.BookRepository;
 import mk.ukim.finki.emt2025.repository.CountryRepository;
 import mk.ukim.finki.emt2025.repository.UserRepository;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 

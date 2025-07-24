@@ -32,7 +32,7 @@
         "is_enabled" boolean not null,
         "name" varchar(255),
         "password" varchar(255),
-        "role" varchar(255) check ("role" in ('ROLE_USER','ROLE_LIBRARIAN')),
+        "role" varchar(255) check ("role" in ('ROLE_USER','ROLE_LIBRARIAN','ROLE_ADMIN')),
         "surname" varchar(255),
         "username" varchar(255) not null,
         primary key ("username")

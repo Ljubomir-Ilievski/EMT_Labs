@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -16,6 +17,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
+
+import static org.springframework.web.servlet.function.RequestPredicates.headers;
 
 /*@Profile("dev")*/
 @Configuration
@@ -32,6 +35,8 @@ public class JwtSecurityWebConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+        System.out.println("FRONTEND_URL");
+        System.out.println(AppConstants.FRONTEND_URL);
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(List.of(AppConstants.FRONTEND_URL));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
@@ -54,7 +59,8 @@ public class JwtSecurityWebConfig {
                                         "/swagger-ui/**",
                                         "/v3/api-docs/**",
                                         "/api/user/register",
-                                        "/api/user/login"
+                                        "/api/user/login",
+                                        "/h2-console/**"
                                 )
                                 .permitAll()
                                 .requestMatchers(
@@ -65,12 +71,14 @@ public class JwtSecurityWebConfig {
                                 .hasAnyRole("USER", "ADMIN")
                                 .anyRequest()
                                 .hasRole("ADMIN")
+
                 )
                 .sessionManagement(sessionManagementConfigurer ->
                         sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)); // Or SAMEORIGIN if you prefer
         return http.build();
     }
 
