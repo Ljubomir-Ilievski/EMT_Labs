@@ -2,7 +2,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: frontend-config
+  namespace: project-namespace
 data:
-  VITE_BACKEND_HOST: backend-service
-  VITE_BACKEND_PORT: 8080
+  VITE_BACKEND_HOST: "backend-service"
+  VITE_BACKEND_PORT: "8080"
 
