@@ -1,0 +1,32 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: db
+  namespace: project-namespace
+spec:
+  instances: 3
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.4
+  storage:
+    storageClass: openebs-hostpath
+    size: 1Gi
+  superuserSecret:
+    name: db-secret
+  bootstrap:
+    initdb:
+      database: app
+      owner: postgres
+      secret:
+        name: db-secret
+  postgresql:
+    parameters:
+      shared_buffers: 256MB
+      max_connections: "100"
+  monitoring:
+    enablePodMonitor: false
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
